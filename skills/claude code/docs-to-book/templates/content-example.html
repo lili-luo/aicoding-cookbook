@@ -1,0 +1,108 @@
+<!-- ══════════════════════════════════════════════════════════════════
+     内容片段模板 = 全站组件字典。每个文件对应 book.config.js 里的一个 slug。
+     片段只写正文，不含 <html>/<head>/<h1>（外壳与页眉由 build.js 生成）。
+     写作规范见 references/voice-style.md；本文件演示所有可用组件。
+     ══════════════════════════════════════════════════════════════════ -->
+
+<p class="lead-extra">正文开头用一两句话点出本页要讲清的核心问题，让读者知道为什么这一页值得读。</p>
+
+<h2>标题与正文</h2>
+<p>二级、三级标题会被自动抽入右侧「本页目录」，因此只把真正的小节标题写成 h2/h3；组件内部的小标题一律用 h4，避免污染目录。</p>
+<p>内联标记：<code>trade_signals</code> 表、<code>orderId</code> 字段、<code>pnpm dev</code> 命令、<strong>强调的关键词</strong>、快捷键 <kbd>⌘K</kbd>。</p>
+
+<h3>三级标题</h3>
+<p>用于在二级标题下进一步细分，同样会进入本页目录。</p>
+
+<h2>提示框 callout</h2>
+<!-- 类型 = note/tip/warn/danger/drift；标签文字由 CSS 自动注入，不写图标不写 emoji -->
+<div class="callout note"><div class="body">
+<strong>附注</strong>补充说明、背景知识，不打断主线的内容。
+</div></div>
+<div class="callout tip"><div class="body">
+<strong>建议</strong>可操作的小技巧或最佳实践。
+</div></div>
+<div class="callout warn"><div class="body">
+<strong>留意</strong>容易踩坑或需要特别注意的地方。
+</div></div>
+<div class="callout drift"><div class="body">
+<strong>文档与代码不一致</strong>此处文档与实际代码有出入，以代码为准。写明具体差异与出处。
+</div></div>
+
+<h2>表格</h2>
+<table>
+<thead><tr><th>列名</th><th>说明</th><th>取值</th></tr></thead>
+<tbody>
+<tr><td>字段 A</td><td>含义说明</td><td><code>enabled</code></td></tr>
+<tr><td>字段 B</td><td>含义说明</td><td>1-100</td></tr>
+</tbody>
+</table>
+
+<h2>代码块</h2>
+<pre><code># 注释说明这组命令在做什么（悬停出现复制按钮）
+pnpm install
+pnpm dev</code></pre>
+
+<h2>Mermaid 图</h2>
+<!-- 节点文字含括号/特殊字符时用双引号包裹；换行用 <br/>；勿用裸 < > -->
+<!-- 用户可点击图放大查看（全屏灯箱），按 Esc 或点击背景关闭 -->
+<div class="mermaid">
+flowchart LR
+  A[输入事件] --> B{判断类型}
+  B -->|匹配| C[生成信号]
+  B -->|不匹配| D[丢弃]
+  C --> E[落库与推送]
+</div>
+
+<h2>卡片网格 cards</h2>
+<!-- 卡片内部标题必须用 h4（h3 会被抽进本页目录）；.k 为可选的小型代号 -->
+<div class="cards">
+  <div class="card"><span class="k">01</span><h4>能力一</h4><p>一句话说明。</p></div>
+  <div class="card"><span class="k">02</span><h4>能力二</h4><p>一句话说明。</p></div>
+  <div class="card"><span class="k">03</span><h4>能力三</h4><p>一句话说明。</p></div>
+</div>
+
+<h2>统计数字带 statband</h2>
+<!-- 适合封面/总览页：3-5 个关键数字一眼看清体量 -->
+<div class="statband">
+  <div class="stat"><div class="num">18</div><div class="lbl">核心模块</div></div>
+  <div class="stat"><div class="num">4</div><div class="lbl">外部集成</div></div>
+  <div class="stat"><div class="num">96%</div><div class="lbl">覆盖率</div></div>
+</div>
+
+<h2>键值定义表 kv</h2>
+<!-- 适合"属性→说明"的少量条目；条目多用 table -->
+<div class="kv">
+  <div class="row"><div class="key">部署形态</div><div class="val">Docker Compose，单机三容器</div></div>
+  <div class="row"><div class="key">数据入口</div><div class="val">Kafka topic <code>events.raw</code></div></div>
+</div>
+
+<h2>流程步骤 steps</h2>
+<!-- 有先后顺序的操作序列；无顺序的枚举用普通 ul -->
+<ol class="steps">
+  <li><strong>准备环境。</strong>安装依赖并复制配置模板。</li>
+  <li><strong>启动服务。</strong>执行 <code>pnpm dev</code>，确认端口监听。</li>
+  <li><strong>验证。</strong>访问健康检查接口，返回 200 即就绪。</li>
+</ol>
+
+<h2>路线时间线 path</h2>
+<!-- 用于阅读路线、演进史等"沿一条轴推进"的内容 -->
+<div class="path">
+  <div class="node"><span class="pnum">第一阶段</span><h4>单体起步</h4><p>一个进程包揽全部职责。</p></div>
+  <div class="node"><span class="pnum">第二阶段</span><h4>拆出数据层</h4><p>读写分离，引入消息队列。</p></div>
+</div>
+
+<h2>标签 chip 与折叠块</h2>
+<p>行内小标签：<span class="chip kafka">KAFKA</span> <span class="chip cron">CRON</span> <span class="chip done">已上线</span> <span class="chip plan">规划中</span></p>
+<details>
+  <summary>展开查看完整环境变量清单</summary>
+  <div class="d-body">
+    <p>低频但完整的细节收进折叠块，不占主线阅读密度。</p>
+  </div>
+</details>
+
+<h2>两栏布局 split 与引用</h2>
+<div class="split">
+  <div><h4>方案 A</h4><p>优点与代价。</p></div>
+  <div><h4>方案 B</h4><p>优点与代价。</p></div>
+</div>
+<blockquote><p>引用原始文档或代码注释中的关键原话时使用，注明出处。</p></blockquote>
