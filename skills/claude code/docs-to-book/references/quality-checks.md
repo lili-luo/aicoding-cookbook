@@ -40,8 +40,12 @@
 | 端口号 | 对照 .env / CLAUDE.md | 9030 误写为 13218 |
 | Workflow 名 | 对照 definitions.ts / CLAUDE.md | `cpiSignalWorkflow` 大小写错误 |
 | 命令/配置值 | 对照原始文档 | `docker compose build` 漏了 service 名 |
-| 关键数字 | 对照原始文档 | 16 个 workflow 目录误写为 15 |
+| 关键数字 | **grep 源码确认**，不信任文档 | 端点数 46 实际 52、阈值 ≥2 实际 ≥3 |
 | Dead table 警告 | 确认危险标注在 | PM 市场库 13218 死表警告是否保留 |
+| 否定结论（「无 X」） | **grep 源码搜索验证** | 文档说「无通知」但代码有 webhook |
+| 配置项有效性 | **在 config.py / Settings 类中确认** | 环境变量名 ≠ 有效配置（死变量） |
+| 代码片段 | **逐行与源文件对齐** | 从文档抄的 create_container() 缺少新参数 |
+| 执行路径描述 | **检查 orchestrator / runner** | 文档说「支持 A/B 模式」但 B 已从运行时移除 |
 
 ### 如果发现事实错误
 
