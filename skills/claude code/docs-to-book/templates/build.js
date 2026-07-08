@@ -223,6 +223,25 @@ flat.forEach((p) => {
       <p>${p.lead}</p>`;
   }
 
+  // ── 内容格式自检：扫描疑似 Markdown 语法 ─────────────────────
+  // content/*.html 应为纯 HTML 片段（build.js 不做 Markdown→HTML 转换）。
+  // 以下模式若出现在最终页面中将显示为裸文本，在此提前告警。
+  const mdWarnings = [];
+  const fragLines = frag.split('\n');
+  fragLines.forEach((line, i) => {
+    const ln = i + 1;
+    if (/^## /.test(line)) mdWarnings.push(`  L${ln}: Markdown h2 "## …" → 应改为 <h2>…</h2>`);
+    if (/^### /.test(line)) mdWarnings.push(`  L${ln}: Markdown h3 "### …" → 应改为 <h3>…</h3>`);
+    if (/^\|.*\|.*\|/.test(line) && !/<(thead|tbody|tr|th|td)/i.test(line))
+      mdWarnings.push(`  L${ln}: Markdown 表格 "|…|" → 应改为 <table> 标签`);
+    if (/^- /.test(line) && !/<li>/i.test(line))
+      mdWarnings.push(`  L${ln}: Markdown 列表 "- …" → 应改为 <ul><li>…</li></ul>`);
+  });
+  if (mdWarnings.length) {
+    console.warn(`\n⚠ ${p.slug}.html 疑似含 Markdown 语法（将原样显示为裸文本）：`);
+    mdWarnings.forEach(w => console.warn(w));
+  }
+
   const { html: withIds, toc } = processHeadings(frag);
   const head = p.home ? '' : pageHead(p);   // 封面页用自带 hero，不套页眉
   const fullBody = (head ? head + '\n' : '') + withIds;
