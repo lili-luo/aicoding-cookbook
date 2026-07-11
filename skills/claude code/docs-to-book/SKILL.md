@@ -241,11 +241,8 @@ description: 把任意项目消化重构为一本结构化、带阅读路线的�
 | 多页站跳转后侧栏回顶 | 绘制前用内联脚本恢复 sessionStorage 滚动位置 |
 | 项目无文档/文档过时 | 按完备度选路径，用 6 角度探查代码反推全书（见 codebase-survey.md） |
 | 把注释/README 当事实 | 注释是线索，以可执行代码为准，冲突记入漂移清单 |
-<<<<<<< HEAD
 | 项目 package.json 设 `"type": "module"` 导致 `require()` 报错 | 若项目根目录的 `package.json` 含 `"type": "module"`，`.js` 文件被 Node.js 视为 ESM，模板中的 `require()` 会直接报 `ReferenceError`。解法：将 `build.js`、`verify.js`、`book.config.js` 改扩展名为 `.cjs`，并更新内部的 `require('./book.config.js')` → `require('./book.config.cjs')`。探测请直接跑 `node build.js`（`node --check` 只查语法，测不出 require 问题）。 |
-=======
 | 信任文档中的数字/计数不验证 | 数字类事实（端点数、阈值、计数）必须 grep 源码确认，文档可能过时 |
 | 文档说「无 X」就信了 | 否定结论必须 grep 源码搜索验证；实测案例：文档说「无通知」但代码有 webhook |
 | 从文档抄代码片段 | 代码片段必须与源文件逐行对齐，文档中的版本可能已过时 |
 | 环境变量名当作有效配置 | 配置项必须在 config.py / Settings 类中确认存在，环境变量名 ≠ 有效配置 |
->>>>>>> pr/5
