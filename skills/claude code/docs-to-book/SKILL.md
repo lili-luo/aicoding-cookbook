@@ -159,6 +159,19 @@ description: 把任意项目消化重构为一本结构化、带阅读路线的�
    - prompt 硬约束：只改散文措辞，绝不动数字/表名/字段/命令/mermaid/HTML 结构
 5. 主 agent 收到子代理返回的内容后，抽查几页确认无事实错误，再统一 Write 落盘
 6. 逐组验收，早退或超时的代理补做
+7. **事实验证（关键，不可跳过）**：全部内容写完后、进入 Phase 4 前，主 agent 必须
+   逐项核对以下高频遗漏模式（实测踩坑总结）：
+   - **数字类事实**（端点数、阈值、计数）：grep 源码确认，不信任文档
+   - **否定结论**（「无 X」「不存在 X」）：grep 源码搜索验证，常见反例：文档说
+     「无通知」但代码有 webhook
+   - **配置项**：在 config.py / Settings 类中确认存在，环境变量名 ≠ 有效配置
+   - **代码片段**：逐行与源文件对齐，不从文档中抄过时版本
+   - **执行路径描述**（如「支持 A/B 两种模式」）：检查 orchestrator / runner
+     确认模式是否仍在运行时路径上
+   详见 quality-checks.md「代码核对 checklist」。
+8. **清理检查**：全部子代理完成后，确认输出目录外没有遗留的临时产物（如代理工具
+   自动落盘的中间文件、未归入 `content/` 的 HTML 片段等）。`git status` 或 `ls`
+   快速扫一遍项目根目录，发现多余文件立即清理。
 ```
 
 ### Phase 4 · 验证
@@ -166,10 +179,16 @@ description: 把任意项目消化重构为一本结构化、带阅读路线的�
 1. 内容准确性抽查（重点）：verify.js 只查语法不查事实。对子代理写的页做抽查——
    至少抽 3-5 页，对照原始文档/CLAUDE.md，确认表名/端口/workflow名/命令/配置值
    未被代理在润色时误改。关键事实项见 quality-checks.md
-2. node verify.js：内部链接全有效、mermaid 语法、HTML 结构
-3. 真实浏览器 headless 渲染所有 mermaid 图，确认 0 报错(光看源码不够)
-4. 截图视觉终检：封面、最复杂页(含多图)、暗色模式
-5. 重新构建确认齐全
+2. **代码核对 checklist**（Phase 3 事实验证的二次确认）：
+   - 每个数字（端点数、阈值、计数）→ grep 源码确认
+   - 每个否定结论（「无 X」）→ grep 源码搜索验证
+   - 每个配置项 → 在 config.py / Settings 类中确认存在
+   - 每个代码片段 → 逐行与源文件对齐
+   - 每个执行路径描述 → 检查 orchestrator / runner 确认
+3. node verify.js：内部链接全有效、mermaid 语法、HTML 结构
+4. 真实浏览器 headless 渲染所有 mermaid 图，确认 0 报错(光看源码不够)
+5. 截图视觉终检：封面、最复杂页(含多图)、暗色模式
+6. 重新构建确认齐全
 ```
 详见 [quality-checks.md](references/quality-checks.md)。
 
@@ -222,4 +241,11 @@ description: 把任意项目消化重构为一本结构化、带阅读路线的�
 | 多页站跳转后侧栏回顶 | 绘制前用内联脚本恢复 sessionStorage 滚动位置 |
 | 项目无文档/文档过时 | 按完备度选路径，用 6 角度探查代码反推全书（见 codebase-survey.md） |
 | 把注释/README 当事实 | 注释是线索，以可执行代码为准，冲突记入漂移清单 |
+<<<<<<< HEAD
 | 项目 package.json 设 `"type": "module"` 导致 `require()` 报错 | 若项目根目录的 `package.json` 含 `"type": "module"`，`.js` 文件被 Node.js 视为 ESM，模板中的 `require()` 会直接报 `ReferenceError`。解法：将 `build.js`、`verify.js`、`book.config.js` 改扩展名为 `.cjs`，并更新内部的 `require('./book.config.js')` → `require('./book.config.cjs')`。探测请直接跑 `node build.js`（`node --check` 只查语法，测不出 require 问题）。 |
+=======
+| 信任文档中的数字/计数不验证 | 数字类事实（端点数、阈值、计数）必须 grep 源码确认，文档可能过时 |
+| 文档说「无 X」就信了 | 否定结论必须 grep 源码搜索验证；实测案例：文档说「无通知」但代码有 webhook |
+| 从文档抄代码片段 | 代码片段必须与源文件逐行对齐，文档中的版本可能已过时 |
+| 环境变量名当作有效配置 | 配置项必须在 config.py / Settings 类中确认存在，环境变量名 ≠ 有效配置 |
+>>>>>>> pr/5
