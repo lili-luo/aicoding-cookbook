@@ -137,7 +137,8 @@ description: 把任意项目消化重构为一本结构化、带阅读路线的�
 3. 跑一次测试构建，确认引擎通(页面占位无妨)
    - 若项目 `package.json` 设了 `"type": "module"`，`.js` 文件会被当成 ESM 导致
      `require()` 报错。此时将 `build.js`、`verify.js`、`book.config.js` 改扩展名为
-     `.cjs`，并更新 `require` 路径。`node --check build.js` 可快速探测。
+     `.cjs`，并更新 `require` 路径。注意：`node --check` 只做语法检查、不会触发
+     `require` 解析，**探测请直接跑** `node build.js`（或先 `node -e "require('./build.js')"`）。
 ```
 
 ### Phase 3 · 内容
@@ -221,4 +222,4 @@ description: 把任意项目消化重构为一本结构化、带阅读路线的�
 | 多页站跳转后侧栏回顶 | 绘制前用内联脚本恢复 sessionStorage 滚动位置 |
 | 项目无文档/文档过时 | 按完备度选路径，用 6 角度探查代码反推全书（见 codebase-survey.md） |
 | 把注释/README 当事实 | 注释是线索，以可执行代码为准，冲突记入漂移清单 |
-| 项目 package.json 设 `"type": "module"` 导致 `require()` 报错 | 若项目根目录的 `package.json` 含 `"type": "module"`，`.js` 文件被 Node.js 视为 ESM，模板中的 `require()` 会直接报 `ReferenceError`。解法：将 `build.js`、`verify.js`、`book.config.js` 改扩展名为 `.cjs`，并更新内部的 `require('./book.config.js')` → `require('./book.config.cjs')`。或先跑一次 `node --check build.js` 探测。 |
+| 项目 package.json 设 `"type": "module"` 导致 `require()` 报错 | 若项目根目录的 `package.json` 含 `"type": "module"`，`.js` 文件被 Node.js 视为 ESM，模板中的 `require()` 会直接报 `ReferenceError`。解法：将 `build.js`、`verify.js`、`book.config.js` 改扩展名为 `.cjs`，并更新内部的 `require('./book.config.js')` → `require('./book.config.cjs')`。探测请直接跑 `node build.js`（`node --check` 只查语法，测不出 require 问题）。 |
